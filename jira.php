@@ -29,7 +29,9 @@ function get_curl() {
 function get_issue($id) {
   $ch = get_curl();
 
-  curl_setopt($ch, CURLOPT_URL, 'https://alshayagroup.atlassian.net/rest/api/3/issue/' . $id);
+  global $jira_url;
+
+  curl_setopt($ch, CURLOPT_URL, $jira_url . '/rest/api/3/issue/' . $id);
   curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
   $result = curl_exec($ch);
   if (curl_errno($ch)) {
@@ -45,7 +47,8 @@ function get_issue($id) {
 
 $worklogs = [];
 
-$api_url = 'https://alshayagroup.atlassian.net/rest/api/3/worklog/updated?expand=renderedFields&since=' . strtotime("-$days day") * 1000;
+global $jira_url;
+$api_url = $jira_url . '/rest/api/3/worklog/updated?expand=renderedFields&since=' . strtotime("-$days day") * 1000;
 
 $total_time = [];
 
@@ -70,7 +73,9 @@ while (1) {
   ];
 
   $ch = get_curl();
-  curl_setopt($ch, CURLOPT_URL, 'https://alshayagroup.atlassian.net/rest/api/3/worklog/list');
+
+  global $jira_url;
+  curl_setopt($ch, CURLOPT_URL, $jira_url . '/rest/api/3/worklog/list');
   curl_setopt($ch, CURLOPT_POST, 1);
   curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($request));
 
